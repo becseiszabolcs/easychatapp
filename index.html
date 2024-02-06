@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat App</title>
+    <style>
+        #chat-container {
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="chat-container">
+
+    </div>
+    <input type="text" id="user" name="user" placeholder="Your Name">
+    <input type="text" id="message" name="message" placeholder="Type your message">
+    <button onclick="sendMessage()">Send</button>
+    <div id="test">
+
+    </div>
+
+    <script>
+        function fetchMessages() {
+            $.ajax({
+                url: 'chat.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if(!data.status) {
+                    $("#test").html("ERROR: " + data.message);
+                    } else if(data.status) {
+                        $("#test").html(data);
+                        displayMessages(data);
+                    }
+                }
+            });
+        }
+
+        function displayMessages(messages) {
+            $('#chat-container').empty();
+            messages.forEach(function(message) {
+                $('#chat-container').append(`<p><strong>${message.user}:</strong> ${message.message}</p>`);
+            });
+        }
+
+        function sendMessage() {
+            var user = $('#user').val();
+            var message = $('#message').val();
+
+            if (user && message) {
+                $.ajax({
+                    url: 'send.php', // Create this file to handle message sending
+                    method: 'POST',
+                    data: { user: user, message: message },
+                    success: function() {
+                        fetchMessages(); // Refresh messages after sending
+                        $('#message').val(''); // Clear the input field
+                    }
+                });
+            }
+        }
+
+        // Fetch messages on page load
+        fetchMessages();
+
+        // Poll for new messages every 5 seconds (adjust as needed)
+        setInterval(fetchMessages, 5000);
+    </script>
+</body>
+</html>
