@@ -4,12 +4,7 @@
 // Assuming you have a database named 'chat' with a table 'messages' having columns 'id', 'user', 'message', 'timestamp'
 
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "chat";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
+include("./connect.php");
 
 // Check connection
 if ($conn->connect_error) {
