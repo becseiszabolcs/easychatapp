@@ -1,5 +1,5 @@
 <?php
-incloud("./connect.php")
+include("./connect.php");
 
 // Check connection
 if ($conn->connect_error) {
